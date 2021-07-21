@@ -203,11 +203,11 @@
                         .duration(500)
                         .style("background", "#ffb703")
                         .style("color", "black");
+
                     if (d == "All") {
                         update(6, 999);
                         d3.select(".title").text(`All Earthquakes 6+ since 1900`);
-                    } 
-                    else if (d == "9+") {
+                    }else if (d == "9+") {
                         update(+d.split('+', 1), 999);
                         d3.select(".title").text(`Earthquakes Magnitude 9+ since 1900`)
                     } else {
@@ -227,7 +227,9 @@
                     svg.append('g')
                         .attr("class", "bubble")
                         .selectAll("circle")
-                        .data(filtered)
+                        .data(filtered.sort(function (a, b) {
+                            return a['mag'] - b['mag'];
+                        }))
                         .enter()
                         .append("circle")
                         .attr('cx', function (d) { return projection([+d['longitude'], +d['latitude']])[0]; })
@@ -284,6 +286,9 @@
                             return 'yellow';
                         }
                     })
+                    .on("mouseover", mouseover)
+                    .on("mousemove", mousemove)
+                    .on("mouseleave", mouseleave)
                     if (year != 1900) {
                         d3.select(".title").text(`All Earthquakes 6+ between 1900 and ${year}`);
                     }else{
